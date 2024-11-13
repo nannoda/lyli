@@ -13,26 +13,24 @@ let
       sha256 = "1rz22amp0l6x51qxvyja47rca94pjxjq00kqa7skjybflnfkvd8z"; # calculated SHA
     };
 
-    nativeBuildInputs = [ pkgs.pkg-config pkgs.cmake pkgs.makeWrapper pkgs.libusb1 ];
+    nativeBuildInputs = [ pkgs.pkg-config pkgs.cmake pkgs.ninja ]; # Use ninja instead of make
     buildInputs = [ pkgs.libusb1 ];
 
     buildPhase = ''
-      # Remove any existing build directory to ensure a fresh configuration
+    rm -rf build CMakeCache.txt CMakeFiles
+
       rm -rf build
-      mkdir build
+      mkdir -p build
       cd build
 
-      # Run CMake with verbose output and debugging information
-      cmake -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_INSTALL_PREFIX=$out ..
-
-      # Verbose build to capture more details
-      make VERBOSE=1
+      # Use Ninja to generate build files
+      cmake -G Ninja -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_INSTALL_PREFIX=$out ..
+      ninja # Use ninja to build
     '';
 
     installPhase = ''
       cd build
-      make install
-
+      ninja install # Use ninja to install
       # Ensure the pkgconfig directory exists
       mkdir -p $out/lib/pkgconfig
 
