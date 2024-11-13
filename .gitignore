@@ -3,3 +3,12 @@ obj-*-linux-gnu/*
 debian/.debhelper/*
 debian/files
 debian/*lyli*/*
+# Devenv
+.devenv*
+devenv.local.nix
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml
